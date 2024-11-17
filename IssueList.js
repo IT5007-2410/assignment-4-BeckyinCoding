@@ -23,7 +23,7 @@ import {
   async function graphQLFetch(query, variables = {}) {
     try {
         /****** Q4: Start Coding here. State the correct IP/port******/
-        const response = await fetch('http://172.20.10.3:3000/graphql', {
+        const response = await fetch('http://10.0.2.2:3000/graphql', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json'},
         body: JSON.stringify({ query, variables })
@@ -51,12 +51,21 @@ class IssueFilter extends React.Component {
     render() {
       return (
         <>
-        {/****** Q1: Start Coding here. ******/}
+        {/* ***** Q1: Start Coding here. ******/}
         {/* <Text style={styles.filterPlaceholder}>Issue Filter Placeholder</Text> */}
-        <ScrollView>
-        <Text>Issue Filter Component</Text>
-        </ScrollView>
-      
+        <View style={styles.sectionContainer}>
+        <Text style={styles.sectionTitle}>Issue Filter Component</Text>
+        <TextInput
+          placeholder="Enter keyword to filter"
+          style={styles.input}
+        />
+        <Button
+          title="Apply Filter"
+          onPress={() => { /* Placeholder */ }}
+         
+        />
+      </View>
+
         {/****** Q1: Code ends here ******/}
         </>
       );
@@ -68,8 +77,29 @@ const styles = StyleSheet.create({
   header: { height: 50, backgroundColor: '#537791' },
   text: { textAlign: 'center' },
   dataWrapper: { marginTop: -1 },
-  row: { height: 40, backgroundColor: '#E7E6E1' }
-  });
+  row: { height: 40, backgroundColor: '#E7E6E1' },
+  sectionContainer: {
+    margin: 10,
+    padding: 10,
+    backgroundColor: '#f9f9f9',
+    borderRadius: 5,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  input: {
+    height: 40,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingLeft: 10,
+    marginBottom: 10,
+  },
+});
+
+
 
 const width= [40,80,80,80,80,80,200];
 
@@ -108,7 +138,9 @@ function IssueRow(props) {
     
     
     return (
+    <ScrollView horizontal style={styles.sectionContainer}>
     <View style={styles.container}>
+    <Text style={styles.sectionTitle}>Issues</Text>
     {/****** Q2: Start Coding here to render the table header/rows.**********/}
     <Table borderStyle={{ borderWidth: 1 }}>
       <Row data={tableHeader} widthArr={width} style={styles.header} textStyle={styles.text} />
@@ -116,6 +148,7 @@ function IssueRow(props) {
     </Table>
     {/****** Q2: Coding Ends here. ******/}
     </View>
+    </ScrollView>
     );
   }
 
@@ -200,7 +233,7 @@ class BlackList extends React.Component {
     const data = await graphQLFetch(query, {nameInput: this.state.owner});
     // this.newnameinput.clear();
     
-    //this.setState({ owner: '' });
+    this.setState({ owner: '' });
     
     /****** Q4: Code Ends here. ******/
     }
@@ -261,25 +294,27 @@ export default class IssueList extends React.Component {
     
     render() {
     return (
-    <>
-    {/****** Q1: Start Coding here. ******/}
-    <IssueFilter/>
-    {/****** Q1: Code ends here ******/}
+      <SafeAreaView style={{ flex: 1, backgroundColor: '#f4f4f4' }}>
+      <StatusBar barStyle="dark-content" />
 
+      <Text style={styles.appTitle}>Issue Tracker IT5007</Text>
 
-    {/****** Q2: Start Coding here. ******/}
-    <IssueTable issues={this.state.issues} />
-    {/****** Q2: Code ends here ******/}
+      <View style={{ flex: 1, padding: 8 }}>
+        <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ flex: 1 }}>
+          {/* Q1: Issue Filter */}
+          <IssueFilter />
 
-    
-    {/****** Q3: Start Coding here. ******/}
-    <IssueAdd createIssue={this.createIssue} />
-    {/****** Q3: Code Ends here. ******/}
+          {/* Q2: Issue Table */}
+          <IssueTable issues={this.state.issues} />
 
-    {/****** Q4: Start Coding here. ******/}
-    <BlackList/>
-    {/****** Q4: Code Ends here. ******/}
-    </>
+          {/* Q3: Issue Add */}
+          <IssueAdd createIssue={this.createIssue} />
+
+          {/* Q4: BlackList */}
+          <BlackList />
+        </ScrollView>
+      </View>
+    </SafeAreaView>
       
     );
   }
